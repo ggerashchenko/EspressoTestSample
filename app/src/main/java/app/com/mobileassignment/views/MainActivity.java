@@ -1,8 +1,10 @@
 package app.com.mobileassignment.views;
 
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements TextWatcher, Adap
 
     public static final String COORDINATES_LAT = "COORDINATES_LAT";
     public static final String COORDINATES_LON = "COORDINATES_LON";
+    public final CountingIdlingResource dataLoadingIdlingResource = new CountingIdlingResource("DataLoadingIdlingResource");
 
     ListView citiesListView;
     EditText search;
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements TextWatcher, Adap
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        dataLoadingIdlingResource.increment();
         adapter.getFilter().filter(charSequence);
     }
 
@@ -83,6 +87,12 @@ public class MainActivity extends AppCompatActivity implements TextWatcher, Adap
             Collections.sort(cities);
 
             adapter = new CityAdapter(MainActivity. this, cities);
+            adapter.registerDataSetObserver(new DataSetObserver() {
+                @Override
+                public void onChanged() {
+                    dataLoadingIdlingResource.decrement();
+                }
+            });
             citiesListView.setAdapter(adapter);
             progressBar.setVisibility(View.GONE);
             layout.setVisibility(View.VISIBLE);
