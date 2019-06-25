@@ -11,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -33,4 +34,33 @@ dependencies {
     testCompile "org.mockito:mockito-core:2.1.0"
     testCompile "org.robolectric:robolectric:3.1.2"
 
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+
+    androidTestCompile('com.android.support.test:runner:0.5') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestCompile('com.android.support.test:rules:0.5') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+
+    }
+    androidTestCompile('com.android.support.test.espresso:espresso-intents:2.2.2') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    compile 'com.android.support.test.espresso:espresso-idling-resource:2.2.2'
 }
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.android.support:support-annotations:24.1.1'
+    }
+}
+
+android {
+    packagingOptions {
+        exclude "META-INF/services/org.xmlpull.v1.XmlPullParserFactory"
+//        pickFirst "kxml2-2.3.0.jar"
+    }
+}
+

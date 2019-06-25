@@ -1,1 +1,11 @@
-/build
+#Gradle
+.gradle/
+build/
+gradle/
+debug.log
+bin/debug.log
+
+# Intellij
+.idea/
+*.iws
+*.iml
